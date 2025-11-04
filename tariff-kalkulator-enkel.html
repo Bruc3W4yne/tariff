@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tariff Kalkulator - Sportsbutikk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .input-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .helper-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .slider-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .slider-section h3 {
+            color: #856404;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .slider-group {
+            margin-bottom: 20px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .slider-label span {
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .slider-value {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: none;
+        }
+        
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .quick-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            display: none;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .results h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin-bottom: 25px;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table th {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            background: #f8f9fa;
+        }
+        
+        .comparison-table td {
+            font-size: 14px;
+        }
+        
+        .comparison-table td:first-child {
+            color: #666;
+        }
+        
+        .comparison-table td:nth-child(2) {
+            color: #888;
+        }
+        
+        .comparison-table td:nth-child(3) {
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: #4caf50;
+        }
+        
+        .negative {
+            color: #f44336;
+        }
+        
+        .summary-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .summary-box.secondary {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .summary-box .label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .summary-box .amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .summary-box .monthly {
+            font-size: 16px;
+            opacity: 0.95;
+            margin-top: 10px;
+        }
+        
+        .verdict-box {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .verdict-box .verdict {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .verdict-box .explanation {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-boxes {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Tariff Kalkulator</h1>
+            <p>Enkelt verktøy for å se hva tariff betyr for deg</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2>👤 Dine tall</h2>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Nåværende timelønn (kr)</label>
+                        <input type="number" id="hourlyWage" value="200" min="0" step="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Din alder</label>
+                        <input type="number" id="age" value="23" min="16" max="70" step="1">
+                        <div class="helper-text">Over 25 år = minimum lønnstrinn 3</div>
+                    </div>
+                </div>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Ansiennitet (år i butikken)</label>
+                        <select id="seniority">
+                            <option value="0">0 år (ny)</option>
+                            <option value="1" selected>1 år</option>
+                            <option value="2">2 år</option>
+                            <option value="3">3 år</option>
+                            <option value="4">4 år</option>
+                            <option value="5">5 år</option>
+                            <option value="6">6 år</option>
+                            <option value="7">7 år</option>
+                            <option value="8">8+ år</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Måneder per år du jobber</label>
+                        <input type="number" id="monthsPerYear" value="11" min="0" max="12" step="1">
+                        <div class="helper-text">Vanligvis 11 (minus feriemåned)</div>
+                    </div>
+                </div>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Totalt timer per måned</label>
+                        <input type="number" id="monthlyHours" value="60" min="0" step="0.5">
+                        <div class="helper-text">Alle timer du jobber</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Helgevakter per måned (lør/søn)</label>
+                        <input type="number" id="weekendShifts" value="2" min="0" step="0.5">
+                        <div class="helper-text">Antar 8 timer per helgevakt (11-19)</div>
+                    </div>
+                </div>
+                
+                <div class="slider-section">
+                    <h3>⚠️ Hva tror du skjer med timer?</h3>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Reduksjon i totale timer:</span>
+                            <span class="slider-value" id="totalReductionValue">15%</span>
+                        </div>
+                        <input type="range" id="totalReduction" min="0" max="50" value="15" step="1" oninput="updateSlider()">
+                        <div class="quick-buttons">
+                            <button class="quick-btn" onclick="setReduction(0)">0% (Ingen kutt)</button>
+                            <button class="quick-btn" onclick="setReduction(15)">15%</button>
+                            <button class="quick-btn" onclick="setReduction(35)">35%</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculate()">Beregn resultater</button>
+            </div>
+            
+            <div class="results" id="results">
+                <h2>📊 Ditt resultat med tariff</h2>
+                <div id="resultContent"></div>
+            </div>
+            
+            <div class="info-box">
+                <strong>💡 Om beregningene:</strong><br>
+                Kalkulatoren antar at helgevakter er 8 timer (11-19), og resten av timene er 4-timers kveldsvakter (17-21). Helgetillegg (kr 42,50/t) gjelder fra kl 13 på lørdag og hele søndagen. Kveldstillegg (kr 28,50/t) gjelder etter kl 17 på hverdager. Pensjon er 2% av brutto årslønn. Minstelønn beregnes ut fra ansiennitet, men alle over 25 år får minimum lønnstrinn 3 (187,46 kr/time).
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // HK Minstelønnssatser per 1. april 2025 fra Virke (timelønn)
+        const TARIFF_WAGES = {
+            0: 184.54,   // Trinn 1 (0 år)
+            1: 185.38,   // Trinn 2 (1 år)
+            2: 187.46,   // Trinn 3 (2 år)
+            3: 187.46,   // Trinn 3 (3 år)
+            4: 193.05,   // Trinn 4 (4 år)
+            5: 193.05,   // Trinn 4 (5 år)
+            6: 210.81,   // Trinn 5 (6 år)
+            7: 210.81,   // Trinn 5 (7 år)
+            8: 256.14    // Trinn 6 (8+ år)
+        };
+        
+        // Tillegg fra tariff
+        const EVENING_BONUS = 28.50;  // Kr per time kveld (etter 17 på hverdager)
+        const WEEKEND_BONUS = 42.50;  // Kr per time helg (lør fra 13, søn hele dagen)
+        const PENSION_RATE = 0.02;    // 2% pensjon
+        const HOURS_PER_WEEKEND_SHIFT = 8; // Fast: 11-19
+        const HOURS_PER_EVENING_SHIFT = 4; // Fast: 17-21
+        
+        function getTariffWage(seniority, age) {
+            // Alle over 25 år får minimum lønnstrinn 3 (187,46 kr)
+            let minTrinn = 0;
+            if (age >= 25) {
+                minTrinn = 2; // Trinn 3 = index 2
+            }
+            
+            // Bruk det høyeste av ansiennitet og aldersbasert minimum
+            const effectiveSeniority = Math.max(seniority, minTrinn);
+            
+            return TARIFF_WAGES[effectiveSeniority] || TARIFF_WAGES[0];
+        }
+        
+        function updateSlider() {
+            document.getElementById('totalReductionValue').textContent = 
+                document.getElementById('totalReduction').value + '%';
+        }
+        
+        function setReduction(value) {
+            document.getElementById('totalReduction').value = value;
+            updateSlider();
+        }
+        
+        function calculate() {
+            // Hent input-verdier
+            const currentWage = parseFloat(document.getElementById('hourlyWage').value);
+            const age = parseInt(document.getElementById('age').value);
+            const seniority = parseInt(document.getElementById('seniority').value);
+            const monthlyHours = parseFloat(document.getElementById('monthlyHours').value);
+            const monthsPerYear = parseFloat(document.getElementById('monthsPerYear').value);
+            const weekendShifts = parseFloat(document.getElementById('weekendShifts').value);
+            const totalReduction = parseFloat(document.getElementById('totalReduction').value) / 100;
+            
+            // Beregn timer fordeling
+            const totalHoursPerYear = monthlyHours * monthsPerYear;
+            const weekendHoursPerMonth = weekendShifts * HOURS_PER_WEEKEND_SHIFT;
+            const weekendHoursPerYear = weekendHoursPerMonth * monthsPerYear;
+            
+            // Resten av timene antas å være kveldsvakter (4 timer hver)
+            const eveningHoursPerMonth = monthlyHours - weekendHoursPerMonth;
+            const eveningHoursPerYear = eveningHoursPerMonth * monthsPerYear;
+            
+            // Nåværende situasjon UTEN tariff
+            const currentAnnualSalary = currentWage * totalHoursPerYear;
+            
+            // Hent tarifflønn basert på ansiennitet OG alder
+            const tariffWage = getTariffWage(seniority, age);
+            
+            // Beregn nye timer MED tariff (etter reduksjon)
+            // Antar samme prosentvis reduksjon på alle typer timer
+            const newTotalHours = totalHoursPerYear * (1 - totalReduction);
+            const newWeekendHours = weekendHoursPerYear * (1 - totalReduction);
+            const newEveningHours = eveningHoursPerYear * (1 - totalReduction);
+            
+            // Beregn lønn MED tariff
+            const newWage = Math.max(currentWage, tariffWage);
+            const newBaseSalary = newWage * newTotalHours;
+            const eveningBonus = newEveningHours * EVENING_BONUS;
+            const weekendBonus = newWeekendHours * WEEKEND_BONUS;
+            const pension = newBaseSalary * PENSION_RATE;
+            
+            // Total MED pensjon
+            const totalWithPension = newBaseSalary + eveningBonus + weekendBonus + pension;
+            const differenceWithPension = totalWithPension - currentAnnualSalary;
+            const monthlyWithPension = differenceWithPension / 12;
+            
+            // Total UTEN pensjon (kun utbetalt)
+            const totalWithoutPension = newBaseSalary + eveningBonus + weekendBonus;
+            const differenceWithoutPension = totalWithoutPension - currentAnnualSalary;
+            const monthlyWithoutPension = differenceWithoutPension / 12;
+            
+            // Bestem resultat-tekst basert på UTEN pensjon (mest relevant for korttidsansatte)
+            let verdictText = '';
+            let verdictColor = '';
+            if (differenceWithoutPension > 5000) {
+                verdictText = '✅ Du tjener på tariff!';
+                verdictColor = '#4caf50';
+            } else if (differenceWithoutPension > 0) {
+                verdictText = '⚖️ Du tjener litt på tariff';
+                verdictColor = '#ff9800';
+            } else if (differenceWithoutPension > -5000) {
+                verdictText = '⚖️ Du taper litt på tariff';
+                verdictColor = '#ff9800';
+            } else {
+                verdictText = '❌ Du taper på tariff';
+                verdictColor = '#f44336';
+            }
+            
+            // Vis resultater
+            document.getElementById('results').classList.add('show');
+            
+            document.getElementById('resultContent').innerHTML = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Post</th>
+                            <th>Nå (uten tariff)</th>
+                            <th>Med tariff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Timelønn</td>
+                            <td>${currentWage.toFixed(2)} kr</td>
+                            <td><strong>${newWage.toFixed(2)} kr ${newWage > currentWage ? '✓' : ''}</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Timer per år</td>
+                            <td>${totalHoursPerYear.toFixed(0)} timer</td>
+                            <td><strong ${totalReduction > 0 ? 'class="negative"' : ''}>${newTotalHours.toFixed(0)} timer ${totalReduction > 0 ? '(-' + (totalReduction*100).toFixed(0) + '%)' : ''}</strong></td>
+                        </tr>
+                        <tr>
+                            <td>- Helgetimer per år</td>
+                            <td>${weekendHoursPerYear.toFixed(0)} timer</td>
+                            <td><strong>${newWeekendHours.toFixed(0)} timer</strong></td>
+                        </tr>
+                        <tr>
+                            <td>- Kveldstimer per år</td>
+                            <td>${eveningHoursPerYear.toFixed(0)} timer</td>
+                            <td><strong>${newEveningHours.toFixed(0)} timer</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Grunnlønn</td>
+                            <td>${currentAnnualSalary.toFixed(0)} kr</td>
+                            <td><strong>${newBaseSalary.toFixed(0)} kr</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Kveldstillegg (kr 28,50/t)</td>
+                            <td>0 kr</td>
+                            <td><strong class="positive">+${eveningBonus.toFixed(0)} kr</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Helgetillegg (kr 42,50/t)</td>
+                            <td>0 kr</td>
+                            <td><strong class="positive">+${weekendBonus.toFixed(0)} kr</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Pensjon (2% av lønn)</td>
+                            <td>0 kr</td>
+                            <td><strong class="positive">+${pension.toFixed(0)} kr</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="summary-boxes">
+                    <div class="summary-box secondary">
+                        <div class="label">Utbetalt per måned (uten pensjon)</div>
+                        <div class="amount">${monthlyWithoutPension > 0 ? '+' : ''}${monthlyWithoutPension.toFixed(0)} kr</div>
+                        <div class="monthly">Per år: ${differenceWithoutPension > 0 ? '+' : ''}${differenceWithoutPension.toFixed(0)} kr</div>
+                    </div>
+                    
+                    <div class="summary-box">
+                        <div class="label">Inkl. pensjon per måned</div>
+                        <div class="amount">${monthlyWithPension > 0 ? '+' : ''}${monthlyWithPension.toFixed(0)} kr</div>
+                        <div class="monthly">Per år: ${differenceWithPension > 0 ? '+' : ''}${differenceWithPension.toFixed(0)} kr</div>
+                    </div>
+                </div>
+                
+                <div class="verdict-box">
+                    <div class="verdict" style="color: ${verdictColor}">${verdictText}</div>
+                    <div class="explanation">
+                        ${differenceWithoutPension > 0 ? 
+                            'Du får mer utbetalt hver måned enn i dag, selv etter eventuelle timekutt.' :
+                            'Du får mindre utbetalt hver måned enn i dag, primært på grunn av timekutt.'
+                        }
+                        ${pension > 1000 ? ' Husk at du også får ' + pension.toFixed(0) + ' kr i pensjon per år.' : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Scroll til resultater
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
